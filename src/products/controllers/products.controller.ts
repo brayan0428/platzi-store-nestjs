@@ -10,10 +10,12 @@ import {
   Put,
 } from '@nestjs/common';
 import { ConfigService, ConfigType } from '@nestjs/config';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import config from 'src/config';
 import { ProductCreate, ProductUpdate } from '../dtos/products.dto';
 import { ProductsService } from '../services/products.service';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(
@@ -22,6 +24,7 @@ export class ProductsController {
     @Inject(config.KEY) private configType: ConfigType<typeof config>,
   ) {}
 
+  @ApiOperation({ summary: 'Get all products' })
   @Get()
   getProducts() {
     console.log(this.appDatabase);

@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import {
   IsNumber,
   IsString,
@@ -10,6 +10,9 @@ import {
 export class ProductCreate {
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({
+    description: 'Product name',
+  })
   name: string;
 
   @IsString()
