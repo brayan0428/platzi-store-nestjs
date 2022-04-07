@@ -7,12 +7,14 @@ export class AppController {
     private readonly appService: AppService,
     @Inject('APP_NAME') private appName: string,
     @Inject('TASKS') private tasks: any[],
+    @Inject('APP_DATABASE') private database: any,
   ) {}
 
   @Get()
   getHello(): string {
     console.log(this.appName);
     console.log(this.tasks);
+    console.log(this.database);
     return this.appService.getHello();
   }
 }

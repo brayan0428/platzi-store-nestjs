@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   ParseIntPipe,
   Post,
@@ -13,10 +14,14 @@ import { ProductsService } from '../services/products.service';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private productService: ProductsService) {}
+  constructor(
+    private productService: ProductsService,
+    @Inject('APP_DATABASE') private appDatabase: any,
+  ) {}
 
   @Get()
   getProducts() {
+    console.log(this.appDatabase);
     return this.productService.findAll();
   }
 
