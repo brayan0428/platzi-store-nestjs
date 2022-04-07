@@ -9,7 +9,8 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService, ConfigType } from '@nestjs/config';
+import config from 'src/config';
 import { ProductCreate, ProductUpdate } from '../dtos/products.dto';
 import { ProductsService } from '../services/products.service';
 
@@ -18,13 +19,13 @@ export class ProductsController {
   constructor(
     private productService: ProductsService,
     @Inject('APP_DATABASE') private appDatabase: any,
-    private configService: ConfigService,
+    @Inject(config.KEY) private configType: ConfigType<typeof config>,
   ) {}
 
   @Get()
   getProducts() {
     console.log(this.appDatabase);
-    console.log(this.configService.get('API_KEY'));
+    console.log(this.configType.apiKey);
     return this.productService.findAll();
   }
 

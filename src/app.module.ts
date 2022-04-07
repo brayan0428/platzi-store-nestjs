@@ -7,12 +7,23 @@ import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './commons/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { enviroments } from './enviroments';
+import config from './config';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: enviroments[process.env.NODE_ENV] || '.env',
       isGlobal: true,
+      load: [config],
+      validationSchema: Joi.object({
+        API_KEY: Joi.string().required(),
+        DB_HOST: Joi.string().required(),
+        DB_PORT: Joi.number().required(),
+        DB_USERNAME: Joi.string().required(),
+        DB_PASSWORD: Joi.string().required(),
+        DB_DATABASE: Joi.string().required(),
+      }),
     }),
     ProductsModule,
     UsersModule,
