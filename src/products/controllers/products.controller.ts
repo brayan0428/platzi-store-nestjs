@@ -9,6 +9,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ProductCreate, ProductUpdate } from '../dtos/products.dto';
 import { ProductsService } from '../services/products.service';
 
@@ -17,11 +18,13 @@ export class ProductsController {
   constructor(
     private productService: ProductsService,
     @Inject('APP_DATABASE') private appDatabase: any,
+    private configService: ConfigService,
   ) {}
 
   @Get()
   getProducts() {
     console.log(this.appDatabase);
+    console.log(this.configService.get('API_KEY'));
     return this.productService.findAll();
   }
 
