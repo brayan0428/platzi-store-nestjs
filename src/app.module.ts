@@ -9,6 +9,20 @@ import { ConfigModule } from '@nestjs/config';
 import { enviroments } from './enviroments';
 import config from './config';
 import * as Joi from 'joi';
+import { MongoClient } from 'mongodb';
+
+const client = new MongoClient(
+  'mongodb://root:root@localhost:27017/?authMechanism=DEFAULT',
+);
+async function run() {
+  await client.connect();
+  const db = client.db('platzi-store');
+  const taskCollection = db.collection('tasks');
+  const tasks = await taskCollection.find().toArray();
+  console.log(tasks);
+}
+
+run();
 
 @Module({
   imports: [
