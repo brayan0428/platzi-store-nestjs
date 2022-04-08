@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { MongoClient } from 'mongodb';
-import { async } from 'rxjs';
+import config from 'src/config';
 
 @Global()
 @Module({
@@ -16,14 +17,17 @@ import { async } from 'rxjs';
     },
     {
       provide: 'MONGO',
-      useFactory: async () => {
+      useFactory: async (configService: ConfigType<typeof config>) => {
+        const { connection, host, port, username, password, database } =
+          configService.database;
         const client = new MongoClient(
-          'mongodb://root:root@localhost:27017/?authMechanism=DEFAULT',
+          `${connection}://${username}:${password}@${host}:${port}/?authMechanism=DEFAULT`,
         );
         await client.connect();
-        const db = client.db('platzi-store');
+        const db = client.db(database);
         return db;
       },
+      inject: [config.KEY],
     },
   ],
   exports: ['APP_DATABASE', 'MONGO'],

@@ -7,6 +7,7 @@ export default registerAs('config', () => {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
+      connection: process.env.DB_CONNECTION,
     },
     apiKey: process.env.API_KEY,
   };
