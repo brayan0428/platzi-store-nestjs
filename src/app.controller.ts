@@ -17,4 +17,9 @@ export class AppController {
     console.log(this.database);
     return this.appService.getHello();
   }
+
+  @Get('tasks')
+  getTasks() {
+    return this.appService.getTasks();
+  }
 }

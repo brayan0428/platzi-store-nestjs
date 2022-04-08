@@ -1,4 +1,6 @@
 import { Global, Module } from '@nestjs/common';
+import { MongoClient } from 'mongodb';
+import { async } from 'rxjs';
 
 @Global()
 @Module({
@@ -12,7 +14,18 @@ import { Global, Module } from '@nestjs/common';
         password: '',
       },
     },
+    {
+      provide: 'MONGO',
+      useFactory: async () => {
+        const client = new MongoClient(
+          'mongodb://root:root@localhost:27017/?authMechanism=DEFAULT',
+        );
+        await client.connect();
+        const db = client.db('platzi-store');
+        return db;
+      },
+    },
   ],
-  exports: ['APP_DATABASE'],
+  exports: ['APP_DATABASE', 'MONGO'],
 })
 export class DatabaseModule {}
