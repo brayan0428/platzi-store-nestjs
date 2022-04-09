@@ -1,44 +1,35 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../entities/user.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [
-    {
-      id: 1,
-      username: 'admin',
-      password: 'admin',
-      email: '',
-      firstName: '',
-      lastName: '',
-      rol: 'admin',
-    },
-  ];
+  constructor(@InjectModel(User.name) private usersModel: Model<User>) {}
 
-  getUsers(): User[] {
-    return this.users;
+  getUsers() {
+    return this.usersModel.find().exec();
   }
 
-  getUser(id: number): User {
-    return this.users.find((user) => user.id === id);
+  getUser(id: string) {
+    return this.usersModel.findById(id);
   }
 
-  createUser(user): User {
-    user.id = this.users.length + 1;
-    this.users.push(user);
-    return user;
+  createUser(user) {
+    const newUser = new this.usersModel(user);
+    return newUser.save();
   }
 
-  updateUser(id: number, user): User {
-    const index = this.users.findIndex((u) => u.id === id);
-    const oldUser = this.users[index];
-    this.users[index] = { ...oldUser, ...user };
-    return this.users[index];
+  updateUser(id: string, user) {
+    const updatedUser = this.usersModel.findByIdAndUpdate(
+      id,
+      { $set: user },
+      { new: true },
+    );
+    return updatedUser;
   }
 
-  deleteUser(id: number): User {
-    const user = this.users.find((u) => u.id === id);
-    this.users = this.users.filter((u) => u.id !== id);
-    return user;
+  deleteUser(id: string) {
+    return this.usersModel.findByIdAndDelete(id);
   }
 }

@@ -5,12 +5,11 @@ import {
   Get,
   Inject,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
 } from '@nestjs/common';
-import { ConfigService, ConfigType } from '@nestjs/config';
+import { ConfigType } from '@nestjs/config';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import config from 'src/config';
 import {

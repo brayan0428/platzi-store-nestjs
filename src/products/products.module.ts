@@ -9,6 +9,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Product, ProductSchema } from './entities/product.entity';
 import { Brand, BrandSchema } from './entities/brand.entity';
 import { Category, CategorySchema } from './entities/category.entity';
+import { OrdersController } from './controllers/orders.controller';
+import { OrdersService } from './services/orders.service';
+import { Order, OrderSchema } from './entities/order.entity';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -24,9 +27,18 @@ import { Category, CategorySchema } from './entities/category.entity';
         name: Category.name,
         schema: CategorySchema,
       },
+      {
+        name: Order.name,
+        schema: OrderSchema,
+      },
     ]),
   ],
-  controllers: [ProductsController, CategoriesController, BrandsController],
-  providers: [ProductsService, CategoriesService, BrandsService],
+  controllers: [
+    ProductsController,
+    CategoriesController,
+    BrandsController,
+    OrdersController,
+  ],
+  providers: [ProductsService, CategoriesService, BrandsService, OrdersService],
 })
 export class ProductsModule {}
