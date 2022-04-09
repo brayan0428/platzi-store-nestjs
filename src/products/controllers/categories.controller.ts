@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -23,7 +22,7 @@ export class CategoriesController {
   }
 
   @Get(':id')
-  getCategory(@Param('id', ParseIntPipe) id: number) {
+  getCategory(@Param('id') id: string) {
     return this.categoriesService.findOne(id);
   }
 
@@ -34,16 +33,13 @@ export class CategoriesController {
   }
 
   @Put(':id')
-  updateCategory(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() category: CategoryUpdate,
-  ) {
+  updateCategory(@Param('id') id: string, @Body() category: CategoryUpdate) {
     const updatedCategory = this.categoriesService.update(id, category);
     return updatedCategory;
   }
 
   @Delete(':id')
-  deleteCategory(@Param('id', ParseIntPipe) id: number) {
+  deleteCategory(@Param('id') id: string) {
     const deletedCategory = this.categoriesService.delete(id);
     return deletedCategory;
   }

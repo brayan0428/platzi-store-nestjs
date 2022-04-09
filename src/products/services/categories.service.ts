@@ -1,40 +1,37 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Category } from '../entities/category.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class CategoriesService {
-  private categories: Category[] = [
-    {
-      id: 1,
-      name: 'Electrodomesticos',
-    },
-  ];
+  constructor(
+    @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
+  ) {}
 
-  findAll(): Category[] {
-    return this.categories;
+  findAll() {
+    return this.categoryModel.find().exec();
   }
 
-  findOne(id: number): Category {
-    return this.categories.find((category) => category.id === id);
+  findOne(id: string) {
+    return this.categoryModel.findById(id);
   }
 
-  create(category): Category {
-    category.id = this.categories.length + 1;
-    this.categories.push(category);
-    return category;
+  create(category) {
+    const newCategory = new this.categoryModel(category);
+    return newCategory.save();
   }
 
-  update(id: number, category): Category {
-    const index = this.categories.findIndex((c) => c.id === id);
-    const updatedCategory = { ...this.categories[index], ...category };
-    this.categories[index] = updatedCategory;
+  update(id: string, category) {
+    const updatedCategory = this.categoryModel.findByIdAndUpdate(
+      id,
+      { $set: category },
+      { new: true },
+    );
     return updatedCategory;
   }
 
-  delete(id: number): Category {
-    const index = this.categories.findIndex((c) => c.id === id);
-    const deletedCategory = this.categories[index];
-    this.categories.splice(index, 1);
-    return deletedCategory;
+  delete(id: string) {
+    return this.categoryModel.findByIdAndRemove(id);
   }
 }

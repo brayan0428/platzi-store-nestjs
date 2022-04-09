@@ -8,6 +8,7 @@ import { BrandsController } from './controllers/brands.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Product, ProductSchema } from './entities/product.entity';
 import { Brand, BrandSchema } from './entities/brand.entity';
+import { Category, CategorySchema } from './entities/category.entity';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -18,6 +19,10 @@ import { Brand, BrandSchema } from './entities/brand.entity';
       {
         name: Brand.name,
         schema: BrandSchema,
+      },
+      {
+        name: Category.name,
+        schema: CategorySchema,
       },
     ]),
   ],

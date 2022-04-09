@@ -38,6 +38,10 @@ export class ProductCreate {
   @IsNotEmpty()
   @IsMongoId()
   brand: string;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  category: string;
 }
 
 export class ProductUpdate extends PartialType(ProductCreate) {}
