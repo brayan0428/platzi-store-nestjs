@@ -7,6 +7,7 @@ import {
   IsPositive,
   Min,
   IsOptional,
+  ValidateIf,
 } from 'class-validator';
 
 export class ProductCreate {
@@ -44,4 +45,12 @@ export class FilterProduct {
   @IsOptional()
   @Min(0)
   offset: number;
+
+  @IsOptional()
+  @Min(0)
+  minPrice: number;
+
+  @ValidateIf((params) => params.minPrice)
+  @Min(0)
+  maxPrice: number;
 }
