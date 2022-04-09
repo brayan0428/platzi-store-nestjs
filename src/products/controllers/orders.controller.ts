@@ -7,7 +7,11 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateOrderDto, UpdateOrderDto } from '../dtos/order.dto';
+import {
+  AddProductOrderDto,
+  CreateOrderDto,
+  UpdateOrderDto,
+} from '../dtos/order.dto';
 import { OrdersService } from '../services/orders.service';
 
 @Controller('orders')
@@ -37,5 +41,18 @@ export class OrdersController {
   @Delete(':id')
   deleteOrder(@Param('id') id: string) {
     return this.ordersService.delete(id);
+  }
+
+  @Post(':id/products')
+  addProductOrder(@Param('id') id: string, @Body() body: AddProductOrderDto) {
+    return this.ordersService.addProduct(id, body.products);
+  }
+
+  @Delete(':id/products/:productId')
+  deleteProductOrder(
+    @Param('id') id: string,
+    @Param('productId') productId: string,
+  ) {
+    return this.ordersService.deleteProduct(id, productId);
   }
 }
