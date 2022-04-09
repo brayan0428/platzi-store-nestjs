@@ -1,39 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Brand } from '../entities/brand.entity';
-
+import { Model } from 'mongoose';
 @Injectable()
 export class BrandsService {
-  private brands: Brand[] = [
-    { id: 1, name: 'Apple' },
-    { id: 2, name: 'Samsung' },
-    { id: 3, name: 'Huawei' },
-  ];
+  constructor(@InjectModel(Brand.name) private brandModel: Model<Brand>) {}
 
-  getBrands(): Brand[] {
-    return this.brands;
+  getBrands() {
+    return this.brandModel.find();
   }
 
-  getBrand(id: number): Brand {
-    return this.brands.find((brand) => brand.id === id);
+  getBrand(id: string) {
+    return this.brandModel.findById(id);
   }
 
-  createBrand(brand): Brand {
-    brand.id = this.brands.length + 1;
-    this.brands.push(brand);
-    return brand;
+  createBrand(brand) {
+    const newBrand = new this.brandModel(brand);
+    return newBrand.save();
   }
 
-  updateBrand(id: number, brand): Brand {
-    const index = this.brands.findIndex((b) => b.id === id);
-    const oldBrand = this.brands[index];
-    this.brands[index] = { ...oldBrand, ...brand };
-    return this.brands[index];
+  updateBrand(id: string, brand) {
+    const brandUpdate = this.brandModel.findByIdAndUpdate(
+      id,
+      { $set: brand },
+      { new: true },
+    );
+    return brandUpdate;
   }
 
-  deleteBrand(id: number): Brand {
-    const index = this.brands.findIndex((b) => b.id === id);
-    const brand = this.brands[index];
-    this.brands.splice(index, 1);
-    return brand;
+  deleteBrand(id: string) {
+    return this.brandModel.findByIdAndDelete(id);
   }
 }

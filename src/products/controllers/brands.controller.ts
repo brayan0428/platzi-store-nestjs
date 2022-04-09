@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  ParseIntPipe,
   Post,
   Put,
   Param,
@@ -23,7 +22,7 @@ export class BrandsController {
   }
 
   @Get(':id')
-  getBrand(@Param('id', ParseIntPipe) id: number) {
+  getBrand(@Param('id') id: string) {
     return this.brandsService.getBrand(id);
   }
 
@@ -33,15 +32,12 @@ export class BrandsController {
   }
 
   @Put(':id')
-  updateBrand(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() brand: BrandUpdate,
-  ) {
+  updateBrand(@Param('id') id: string, @Body() brand: BrandUpdate) {
     return this.brandsService.updateBrand(id, brand);
   }
 
   @Delete(':id')
-  deleteBrand(@Param('id', ParseIntPipe) id: number) {
+  deleteBrand(@Param('id') id: string) {
     return this.brandsService.deleteBrand(id);
   }
 }

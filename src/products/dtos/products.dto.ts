@@ -8,6 +8,7 @@ import {
   Min,
   IsOptional,
   ValidateIf,
+  IsMongoId,
 } from 'class-validator';
 
 export class ProductCreate {
@@ -33,6 +34,10 @@ export class ProductCreate {
   @IsNumber()
   @IsPositive()
   quantity: number;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  brand: string;
 }
 
 export class ProductUpdate extends PartialType(ProductCreate) {}
