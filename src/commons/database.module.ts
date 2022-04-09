@@ -1,10 +1,28 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import { MongoClient } from 'mongodb';
 import config from 'src/config';
 
 @Global()
 @Module({
+  imports: [
+    MongooseModule.forRootAsync({
+      useFactory: async (configService: ConfigType<typeof config>) => {
+        const { connection, host, port, username, password, database } =
+          configService.database;
+        return {
+          uri: `${connection}://${host}:${port}`,
+          user: username,
+          pass: password,
+          dbName: database,
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        };
+      },
+      inject: [config.KEY],
+    }),
+  ],
   providers: [
     {
       provide: 'APP_DATABASE',

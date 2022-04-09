@@ -33,7 +33,7 @@ export class ProductsController {
   }
 
   @Get(':id')
-  getProduct(@Param('id', ParseIntPipe) id: number) {
+  getProduct(@Param('id') id: string) {
     return this.productService.findOne(id);
   }
 
@@ -44,16 +44,13 @@ export class ProductsController {
   }
 
   @Put(':id')
-  updateProduct(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() product: ProductUpdate,
-  ) {
+  updateProduct(@Param('id') id: string, @Body() product: ProductUpdate) {
     const updatedProduct = this.productService.update(id, product);
     return updatedProduct;
   }
 
   @Delete(':id')
-  deleteProduct(@Param('id', ParseIntPipe) id: number) {
+  deleteProduct(@Param('id') id: string) {
     const deletedProduct = this.productService.delete(id);
     return deletedProduct;
   }

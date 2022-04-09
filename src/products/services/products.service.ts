@@ -1,45 +1,37 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Product } from '../entities/product.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class ProductsService {
-  private products: Product[] = [
-    {
-      id: 1,
-      name: 'Product 1',
-      description: 'Description 1',
-      url: 'http://url1.com',
-      price: 100,
-      quantity: 10,
-    },
-  ];
+  constructor(
+    @InjectModel(Product.name) private productModel: Model<Product>,
+  ) {}
 
-  findAll(): Product[] {
-    return this.products;
+  findAll() {
+    return this.productModel.find().exec();
   }
 
-  findOne(id: number): Product {
-    return this.products.find((product) => product.id === id);
+  findOne(id: string) {
+    return this.productModel.findById(id).exec();
   }
 
-  create(product): Product {
-    const newProduct = { ...product };
-    newProduct.id = this.products.length + 1;
-    this.products.push(newProduct);
-    return newProduct;
+  create(product) {
+    const newProduct = new this.productModel(product);
+    return newProduct.save();
   }
 
-  update(id: number, product): Product {
-    const index = this.products.findIndex((p) => p.id === id);
-    const oldProduct = this.products[index];
-    this.products[index] = { ...oldProduct, ...product };
-    return this.products[index];
+  update(id: string, product) {
+    const productUpdate = this.productModel.findByIdAndUpdate(
+      id,
+      { $set: product },
+      { new: true },
+    );
+    return productUpdate;
   }
 
-  delete(id: number): Product {
-    const index = this.products.findIndex((p) => p.id === id);
-    const deletedProduct = this.products[index];
-    this.products.splice(index, 1);
-    return deletedProduct;
+  delete(id: string) {
+    return this.productModel.findByIdAndDelete(id).exec();
   }
 }
