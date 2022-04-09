@@ -8,11 +8,16 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import config from 'src/config';
-import { ProductCreate, ProductUpdate } from '../dtos/products.dto';
+import {
+  FilterProduct,
+  ProductCreate,
+  ProductUpdate,
+} from '../dtos/products.dto';
 import { ProductsService } from '../services/products.service';
 
 @ApiTags('products')
@@ -26,10 +31,10 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Get all products' })
   @Get()
-  getProducts() {
+  getProducts(@Query() params: FilterProduct) {
     console.log(this.appDatabase);
     console.log(this.configType.apiKey);
-    return this.productService.findAll();
+    return this.productService.findAll(params);
   }
 
   @Get(':id')

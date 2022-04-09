@@ -5,6 +5,8 @@ import {
   IsUrl,
   IsNotEmpty,
   IsPositive,
+  Min,
+  IsOptional,
 } from 'class-validator';
 
 export class ProductCreate {
@@ -33,3 +35,13 @@ export class ProductCreate {
 }
 
 export class ProductUpdate extends PartialType(ProductCreate) {}
+
+export class FilterProduct {
+  @IsOptional()
+  @IsPositive()
+  limit: number;
+
+  @IsOptional()
+  @Min(0)
+  offset: number;
+}

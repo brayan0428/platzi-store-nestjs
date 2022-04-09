@@ -5,7 +5,13 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
   const config = new DocumentBuilder()
     .setTitle('API')
     .setDescription('The Platzi Store API')
