@@ -9,7 +9,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ConfigService, ConfigType } from '@nestjs/config';
+import { ConfigType } from '@nestjs/config';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import config from 'src/config';
 import { ProductCreate, ProductUpdate } from '../dtos/products.dto';
@@ -27,8 +27,6 @@ export class ProductsController {
   @ApiOperation({ summary: 'Get all products' })
   @Get()
   getProducts() {
-    console.log(this.appDatabase);
-    console.log(this.configType.apiKey);
     return this.productService.findAll();
   }
 
