@@ -1,40 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Category } from '../entities/category.entity';
 
 @Injectable()
 export class CategoriesService {
-  private categories: Category[] = [
-    {
-      id: 1,
-      name: 'Electrodomesticos',
-    },
-  ];
+  constructor(
+    @InjectRepository(Category) private categoryRepo: Repository<Category>,
+  ) {}
 
-  findAll(): Category[] {
-    return this.categories;
+  findAll() {
+    return this.categoryRepo.find();
   }
 
-  findOne(id: number): Category {
-    return this.categories.find((category) => category.id === id);
+  findOne(id: number) {
+    return this.categoryRepo.findOne(id);
   }
 
-  create(category): Category {
-    category.id = this.categories.length + 1;
-    this.categories.push(category);
-    return category;
+  create(category) {
+    const newCategory = this.categoryRepo.create(category);
+    return this.categoryRepo.save(newCategory);
   }
 
-  update(id: number, category): Category {
-    const index = this.categories.findIndex((c) => c.id === id);
-    const updatedCategory = { ...this.categories[index], ...category };
-    this.categories[index] = updatedCategory;
-    return updatedCategory;
+  async update(id: number, changes) {
+    const category = await this.categoryRepo.findOne(id);
+    this.categoryRepo.merge(category, changes);
+    return this.categoryRepo.save(category);
   }
 
-  delete(id: number): Category {
-    const index = this.categories.findIndex((c) => c.id === id);
-    const deletedCategory = this.categories[index];
-    this.categories.splice(index, 1);
-    return deletedCategory;
+  delete(id: number) {
+    return this.categoryRepo.delete(id);
   }
 }
