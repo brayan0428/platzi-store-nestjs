@@ -1,39 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Brand } from '../entities/brand.entity';
 
 @Injectable()
 export class BrandsService {
-  private brands: Brand[] = [
-    { id: 1, name: 'Apple' },
-    { id: 2, name: 'Samsung' },
-    { id: 3, name: 'Huawei' },
-  ];
+  constructor(@InjectRepository(Brand) private brandsRepo: Repository<Brand>) {}
 
-  getBrands(): Brand[] {
-    return this.brands;
+  getBrands() {
+    return this.brandsRepo.find();
   }
 
-  getBrand(id: number): Brand {
-    return this.brands.find((brand) => brand.id === id);
+  getBrand(id: number) {
+    return this.brandsRepo.findOne(id);
   }
 
-  createBrand(brand): Brand {
-    brand.id = this.brands.length + 1;
-    this.brands.push(brand);
-    return brand;
+  createBrand(brand) {
+    const newBrand = this.brandsRepo.create(brand);
+    return this.brandsRepo.save(newBrand);
   }
 
-  updateBrand(id: number, brand): Brand {
-    const index = this.brands.findIndex((b) => b.id === id);
-    const oldBrand = this.brands[index];
-    this.brands[index] = { ...oldBrand, ...brand };
-    return this.brands[index];
+  async updateBrand(id: number, changes) {
+    const brand = await this.brandsRepo.findOne(id);
+    this.brandsRepo.merge(brand, changes);
+    return this.brandsRepo.save(brand);
   }
 
-  deleteBrand(id: number): Brand {
-    const index = this.brands.findIndex((b) => b.id === id);
-    const brand = this.brands[index];
-    this.brands.splice(index, 1);
-    return brand;
+  deleteBrand(id: number) {
+    return this.brandsRepo.delete(id);
   }
 }
