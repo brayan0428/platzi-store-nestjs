@@ -30,6 +30,16 @@ export class ProductCreate {
   @IsNumber()
   @IsPositive()
   quantity: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @IsPositive()
+  brandId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @IsPositive()
+  categoryId: number;
 }
 
 export class ProductUpdate extends PartialType(ProductCreate) {}

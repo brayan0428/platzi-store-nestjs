@@ -14,7 +14,9 @@ export class CategoriesService {
   }
 
   findOne(id: number) {
-    return this.categoryRepo.findOne(id);
+    return this.categoryRepo.findOne(id, {
+      relations: ['products'],
+    });
   }
 
   create(category) {

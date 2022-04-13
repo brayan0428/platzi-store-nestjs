@@ -12,7 +12,9 @@ export class BrandsService {
   }
 
   getBrand(id: number) {
-    return this.brandsRepo.findOne(id);
+    return this.brandsRepo.findOne(id, {
+      relations: ['products'],
+    });
   }
 
   createBrand(brand) {
