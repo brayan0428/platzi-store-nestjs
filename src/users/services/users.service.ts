@@ -1,44 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [
-    {
-      id: 1,
-      username: 'admin',
-      password: 'admin',
-      email: '',
-      firstName: '',
-      lastName: '',
-      rol: 'admin',
-    },
-  ];
+  constructor(@InjectRepository(User) private usersRepo: Repository<User>) {}
 
-  getUsers(): User[] {
-    return this.users;
+  getUsers() {
+    return this.usersRepo.find();
   }
 
-  getUser(id: number): User {
-    return this.users.find((user) => user.id === id);
+  getUser(id: number) {
+    return this.usersRepo.findOne(id);
   }
 
-  createUser(user): User {
-    user.id = this.users.length + 1;
-    this.users.push(user);
-    return user;
+  createUser(user) {
+    const newUser = this.usersRepo.create(user);
+    return this.usersRepo.save(newUser);
   }
 
-  updateUser(id: number, user): User {
-    const index = this.users.findIndex((u) => u.id === id);
-    const oldUser = this.users[index];
-    this.users[index] = { ...oldUser, ...user };
-    return this.users[index];
+  async updateUser(id: number, changes) {
+    const user = await this.usersRepo.findOne(id);
+    this.usersRepo.merge(user, changes);
+    return this.usersRepo.save(user);
   }
 
-  deleteUser(id: number): User {
-    const user = this.users.find((u) => u.id === id);
-    this.users = this.users.filter((u) => u.id !== id);
-    return user;
+  deleteUser(id: number) {
+    return this.usersRepo.delete(id);
   }
 }
